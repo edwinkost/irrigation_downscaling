@@ -170,8 +170,9 @@ def main():
     # - netcdf output variable name, file name, and unit
     output = {}
     var = "irrigationArea"
-    (output[var]['file_name'] = out_directory + "/" + "irrigated_area_30sec_hectar_meier_g_aei_1900_2015_v20250211.nc"
-    (output[var]['unit'] = "hectar"
+    output[var] = {}
+    output[var]['file_name'] = out_directory + "/" + "irrigated_area_30sec_hectar_meier_g_aei_1900_2015_v20250211.nc"
+    output[var]['unit'] = "hectar"
     tssNetCDF.createNetCDF(output[var]['file_name'], var, output[var]['unit'])
     # - index for the netcdf file
     index = 0
@@ -217,6 +218,7 @@ def main():
         # ~ pcr.aguila(downscaled_irr_area_30sec)                                                                     
 
         # write values to a netcdf file
+        var = "irrigationArea"
         ncFileName = output[var]['file_name']
         varField = pcr.pcr2numpy(downscaled_irr_area_30sec, vos.MV)
         timeStamp = datetime.datetime(int(iYear), int(1), int(1), int(0))
