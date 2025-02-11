@@ -5,6 +5,7 @@ import shutil
 import datetime
 
 import numpy as np
+import netCDF4 as nc
 import pcraster as pcr
 
 import virtualOS as vos
