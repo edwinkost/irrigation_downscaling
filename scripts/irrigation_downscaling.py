@@ -118,25 +118,24 @@ def main():
     
     # cell area at 30 arcsec resolution (unit: m2)
     cell_area_30sec_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/routing/cell_area/cdo_grid_area_30sec_map_correct_lat.nc"
-    cell_area_30sec      = vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_30sec_file,\
-                                                             varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
+    cell_area_30sec      = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_30sec_file,\
+                                                                       varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None), 0.0)
 
     # typical/reference irrigation area fraction within 30sec cell, based on the GFSAD1KCM
     irr_area_30sec_fraction_file = "/projects/0/dfguu/users/edwin/data/GFSAD1KCM/edwin_process_on_2021-03-XX/global_irrigated_map_GFSAD1KCMv001_30sec.map"
     irr_area_30sec_fraction = vos.readPCRmapClone(v = irr_area_30sec_fraction_file, \
                                                   cloneMapFileName = clone_map_file, tmpDir = tmp_directory)
+    irr_area_30sec_fraction = pcr.cover(irr_area_30sec_fraction, 0.0)
     # typical/reference irrigation area within 30sec cell (unit: m2)
     irr_area_30sec = irr_area_30sec_fraction * cell_area_30sec
 
     # cell area at 5 arcmin resolution (unit: m2)
     cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
-    cell_area_5min       = vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
-                                                            varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
+    cell_area_5min       = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
+                                                                       varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None), 0.0)
     
     # cell unique id at 5 arcmin resolution
     uniqueid_5min_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_05min/others/uniqueids/uniqueid_5min.map"
-    pcr.aguila(uniqueid_5min_file)
-    piet
     uniqueid_5min      = vos.readPCRmapClone(v = uniqueid_5min_file, \
                                              cloneMapFileName = clone_map_file, tmpDir = tmp_directory, absolutePath = None, isLddMap = False, cover = None, isNomMap = True)
 
