@@ -102,8 +102,8 @@ def main():
 
     # output and temporary directories
     out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/test/"
-    out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/rhine_meuse_1900_2015/"
-    # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/global_1900_2015/"
+    # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/rhine_meuse_1900_2015/"
+    out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/global_1900_2015/"
     # ~ out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
@@ -116,8 +116,8 @@ def main():
 
 
     # clone map
-    clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/europe_30sec/cloneMaps/clonemaps_europe_countries/rhinemeuse/rhinemeuse_30sec.map"
-    # ~ clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/cloneMaps/global_30sec_clone.map"
+    # ~ clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/europe_30sec/cloneMaps/clonemaps_europe_countries/rhinemeuse/rhinemeuse_30sec.map"
+    clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/cloneMaps/global_30sec_clone.map"
     pcr.setclone(clone_map_file) 
     
     
