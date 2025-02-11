@@ -96,7 +96,7 @@ def main():
     # output and temporary directories
     out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/test/"
     # ~ out_directory = sys.argv[1]
-    tmp_directory     = output_dir + "/" + "tmp" + "/"
+    tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
     if os.path.exists(out_directory):
         shutil.rmtree(out_directory)
