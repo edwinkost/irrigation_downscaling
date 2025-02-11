@@ -152,12 +152,35 @@ def main():
     # ~ staYear = int(sys.argv[4])
     # ~ endYear = int(sys.argv[5])
     
+
+    # attribute for netCDF files 
+    attributeDictionary = {}
+    attributeDictionary['title'      ]  = "Irrigation areas - 30sec"
+    attributeDictionary['institution']  = "Dept. of Physical Geography, Utrecht University"
+    attributeDictionary['source'     ]  = "Downscaled from " + irr_area_5min_file + " based on " + irr_area_30sec_fraction_file
+    attributeDictionary['history'    ]  = "None"
+    attributeDictionary['references' ]  = "None"
+    attributeDictionary['comment'    ]  = "None"
+    # additional attribute defined in PCR-GLOBWB 
+    attributeDictionary['description']  = "Created by Edwin H. Sutanudjaja, see https://github.com/edwinkost/irrigation_downscaling/blob/main/scripts/irrigation_downscaling.py"
+
+    # initiate the netcd object: 
+    tssNetCDF = MakingNetCDF(cloneMapFile = cloneMapFileName, \
+                             attribute = clone_map_file)
+    # - netcdf output variable name, file name, and unit
+    output = {}
+    var = "irrigationArea"
+    (output[var]['file_name'] = out_directory + "/" + "irrigated_area_30sec_hectar_meier_g_aei_1900_2015_v20250211.nc"
+    (output[var]['unit'] = "hectar"
+    tssNetCDF.createNetCDF(output[var]['file_name'], var, output[var]['unit'])
+    # - index for the netcdf file
+    index = 0
+    
     for iYear in range(staYear, endYear+1):
         
         print(iYear)
         
-        # time stamp for reading netcdf files:
-        timeStamp = datetime.datetime(int(iYear), int(1), int(1), int(0))
+        # time stamp for reading netcdf file:
         fulldate = '%4i-%02i-%02i'  %(int(iYear), int(1), int(1))
 
         # reading irrigation area at 5 arcmin resolution (unit: hectar)
@@ -191,7 +214,17 @@ def main():
         downscaled_irr_area_30sec = downscaled_irr_area_30sec + \
                                     remaining_irr_area_5min * pcr.ifthenelse(sum_not_irr_assigned_yet_cell_area_30sec_at_5min > 0.0, \
                                                                              not_irr_assigned_yet_cell_area_30sec/sum_not_irr_assigned_yet_cell_area_30sec_at_5min, 0.0)
-        pcr.aguila(downscaled_irr_area_30sec)                                                                     
+        # ~ pcr.aguila(downscaled_irr_area_30sec)                                                                     
+
+        # write values to a netcdf file
+        ncFileName = output[var]['file_name']
+        varField = pcr.pcr2numpy(downscaled_irr_area_30sec, vos.MV)
+        timeStamp = datetime.datetime(int(iYear), int(1), int(1), int(0))
+        tssNetCDF.writePCR2NetCDF(ncFileName, var, varField, timeStamp, posCnt = index)
+        
+        # update index for the next time step
+        index = index + 1
+
 
 if __name__ == '__main__':
     sys.exit(main())
