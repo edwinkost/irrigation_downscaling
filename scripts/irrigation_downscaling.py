@@ -103,7 +103,7 @@ def main():
     # output and temporary directories
     out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/test/"
     out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/rhine_meuse_1900_2015/"
-    out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/global_1900_2015/"
+    # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/global_1900_2015/"
     # ~ out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
@@ -117,7 +117,7 @@ def main():
 
     # clone map
     clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/europe_30sec/cloneMaps/clonemaps_europe_countries/rhinemeuse/rhinemeuse_30sec.map"
-    clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/cloneMaps/global_30sec_clone.map"
+    # ~ clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/cloneMaps/global_30sec_clone.map"
     pcr.setclone(clone_map_file) 
     
     
@@ -192,10 +192,12 @@ def main():
         fulldate = '%4i-%02i-%02i'  %(int(iYear), int(1), int(1))
 
         # reading irrigation area at 5 arcmin resolution (unit: hectar)
+        # - unit (hectar)
         irr_area_5min = vos.netcdf2PCRobjClone(ncFile = irr_area_5min_file,\
                                                varName = "automatic", dateInput = fulldate, useDoy = None, cloneMapFileName  = clone_map_file, LatitudeLongitude = True, specificFillValue = None)
-    
         irr_area_5min = pcr.cover(irr_area_5min, 0.0)
+        # - unit (m2)
+        irr_area_5min = irr_area_5min * 10000.
         # step 0: make sure that irrigation area at 5 arcmin does not exceed 5 arcmin cell area: irr_area_5min = min(cell_area_5min, irr_area_5min)
         irr_area_5min = pcr.min(irr_area_5min, cell_area_5min)
     
@@ -219,15 +221,18 @@ def main():
         # - TODO: Add the suitability map in this step.
         
         # step 4: assigning the remaining irrigation area at 5 arcmin to 30sec cell: downscaled_irr_area_30sec = downscaled_irr_area_30sec + (not_irr_assigned_yet_cell_area_30sec / sum_not_irr_assigned_yet_cell_area_30sec) * remaining_irr_area_5min 
+        # - unit: m2
         downscaled_irr_area_30sec = downscaled_irr_area_30sec + \
                                     remaining_irr_area_5min * pcr.ifthenelse(sum_not_irr_assigned_yet_cell_area_30sec_at_5min > 0.0, \
                                                                              not_irr_assigned_yet_cell_area_30sec/sum_not_irr_assigned_yet_cell_area_30sec_at_5min, 0.0)
         # ~ pcr.aguila(downscaled_irr_area_30sec)                                                                     
+        # - unit: hectar
+        downscaled_irr_area_30sec_in_hectar = downscaled_irr_area_30sec / 10000.
 
         # write values to a netcdf file
         var = "irrigationArea"
         ncFileName = output[var]['file_name']
-        varField = pcr.pcr2numpy(downscaled_irr_area_30sec, vos.MV)
+        varField = pcr.pcr2numpy(downscaled_irr_area_30sec_in_hectar, vos.MV)
         timeStamp = datetime.datetime(int(iYear), int(1), int(1), int(0))
         tssNetCDF.writePCR2NetCDF(ncFileName, var, varField, timeStamp, posCnt = index)
         
