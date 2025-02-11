@@ -1,4 +1,6 @@
 
+import os
+import sys
 import pcraster as pcr
 
 # General steps:
