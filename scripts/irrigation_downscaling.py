@@ -152,6 +152,8 @@ def main():
     
     for iYear in range(staYear, endYear+1):
         
+        print(iYear)
+        
         # time stamp for reading netcdf files:
         timeStamp = datetime.datetime(int(iYear), int(1), int(1), int(0))
         fulldate = '%4i-%02i-%02i'  %(int(iYear), int(1), int(1))
