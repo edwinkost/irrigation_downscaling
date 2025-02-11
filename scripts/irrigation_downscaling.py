@@ -102,6 +102,7 @@ def main():
 
     # output and temporary directories
     out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/test/"
+    out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/rhine_meuse_1900_2015/"
     # ~ out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
@@ -151,6 +152,8 @@ def main():
     # start year and end year
     staYear = 2000
     endYear = 2005
+    staYear = 1900
+    endYear = 2015
     # ~ staYear = int(sys.argv[4])
     # ~ endYear = int(sys.argv[5])
     
