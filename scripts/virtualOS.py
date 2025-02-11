@@ -43,9 +43,7 @@ import glob
 import netCDF4 as nc
 import numpy as np
 import numpy.ma as ma
-from lue.framework.pcraster_provider import pcr
-
-import lue.framework as lfr
+import pcraster as pcr
 
 import logging
 
@@ -71,6 +69,31 @@ max_num_of_tries = 5
 # ~ # - set it to infinity - NOT RECOMMENDED
 # ~ max_num_of_tries = float("inf")
 
+
+def aguila_with_var_name(pcr_field, file_name, tmp_directory = None):
+
+    if tmp_directory is not None: file_name = tmp_directory + "/" + file_name + ".tmp.map"
+    
+    # save the variable to a pcraster file and visualize it using aguila
+    pcr.report(pcr_field, file_name)
+    # - using os.system
+    cmd = "aguila " + str(file_name) + " & "
+    os.system(cmd)
+    # ~ # - using subprocess
+    # ~ cmd = "aguila " + str(file_name)
+    # ~ print(cmd)
+    # ~ proc = subprocess.Popen([cmd], shell = True,
+                                   # ~ stdin = None, stdout = None, stderr = None, close_fds = True)
+    
+    # ~ # remove the pcraster file - WE CANNOT DO THIS!!! (as the files will still be open/active)
+    # ~ cmd = 'rm ' + file_name
+    # ~ os.system(cmd)
+    
+
+def get_var_name(var):
+    for name, value in globals().items():
+        if value is var:
+            return name
 
 def getFileList(inputDir, filePattern):
     '''creates a dictionary of  files meeting the pattern specified'''
@@ -1836,69 +1859,52 @@ def isLastDayOfMonth(date):
         return False
 
 def getMapAttributesALL(cloneMap,arcDegree=True):
-    # TODO Create LUE equivalent for this, using lue.gdal?
-    # cOut,err = subprocess.Popen(str('mapattr -p %s ' %(cloneMap)), stdout=subprocess.PIPE,stderr=open(os.devnull),shell=True).communicate()
+    cOut,err = subprocess.Popen(str('mapattr -p %s ' %(cloneMap)), stdout=subprocess.PIPE,stderr=open(os.devnull),shell=True).communicate()
 
-    # if err !=None or cOut == b"":  # []:
-    #     print("Something wrong with mattattr in virtualOS, maybe clone Map does not exist ? ")
-    #     sys.exit()
-    # cellsize = float(cOut.split()[7])
-    # if arcDegree == True: cellsize = round(cellsize * 360000.)/360000.
-    # mapAttr = {'cellsize': float(cellsize)        ,\
-    #            'rows'    : float(cOut.split()[3]) ,\
-    #            'cols'    : float(cOut.split()[5]) ,\
-    #            'xUL'     : float(cOut.split()[17]),\
-    #            'yUL'     : float(cOut.split()[19])}
-    # co = None; cOut = None; err = None
-    # del co; del cOut; del err
-    # n = gc.collect() ; del gc.garbage[:] ; n = None ; del n
-    # return mapAttr 
-
-    return {
-        'cellsize': 0.5,
-        'rows'    : 360,
-        'cols'    : 720,
-        'xUL'     : -180,
-        'yUL'     : 90,
-    }
-
+    if err !=None or cOut == []:
+        print("Something wrong with mattattr in virtualOS, maybe clone Map does not exist ? ")
+        sys.exit()
+    cellsize = float(cOut.split()[7])
+    if arcDegree == True: cellsize = round(cellsize * 360000.)/360000.
+    mapAttr = {'cellsize': float(cellsize)        ,\
+               'rows'    : float(cOut.split()[3]) ,\
+               'cols'    : float(cOut.split()[5]) ,\
+               'xUL'     : float(cOut.split()[17]),\
+               'yUL'     : float(cOut.split()[19])}
+    co = None; cOut = None; err = None
+    del co; del cOut; del err
+    n = gc.collect() ; del gc.garbage[:] ; n = None ; del n
+    return mapAttr 
 
 def getMapAttributes(cloneMap,attribute,arcDegree=True):
-    # TODO Create LUE equivalent for this, using lue.gdal?
-    # cOut,err = subprocess.Popen(str('mapattr -p %s ' %(cloneMap)), stdout=subprocess.PIPE,stderr=open(os.devnull),shell=True).communicate()
-    # #print cOut
-    # if err !=None or cOut == b"":  # []:
-    #     print("Something wrong with mattattr in virtualOS, maybe clone Map does not exist ? ")
-    #     sys.exit()
-    # #print cOut.split()
-    # co = None; err = None
-    # del co; del err
-    # n = gc.collect() ; del gc.garbage[:] ; n = None ; del n
-    # if attribute == 'cellsize':
-    #     cellsize = float(cOut.split()[7])
-    #     if arcDegree == True: cellsize = round(cellsize * 360000.)/360000.
-    #     return cellsize  
-    # if attribute == 'rows':
-    #     return int(cOut.split()[3])
-    #     #return float(cOut.split()[3])
-    # if attribute == 'cols':
-    #     return int(cOut.split()[5])
-    #     #return float(cOut.split()[5])
-    # if attribute == 'xUL':
-    #     return float(cOut.split()[17])
-    # if attribute == 'yUL':
-    #     return float(cOut.split()[19])
-
-    return getMapAttributesALL(cloneMap, arcDegree)[attribute]
+    cOut,err = subprocess.Popen(str('mapattr -p %s ' %(cloneMap)), stdout=subprocess.PIPE,stderr=open(os.devnull),shell=True).communicate()
+    #print cOut
+    if err !=None or cOut == []:
+        print("Something wrong with mattattr in virtualOS, maybe clone Map does not exist ? ")
+        sys.exit()
+    #print cOut.split()
+    co = None; err = None
+    del co; del err
+    n = gc.collect() ; del gc.garbage[:] ; n = None ; del n
+    if attribute == 'cellsize':
+        cellsize = float(cOut.split()[7])
+        if arcDegree == True: cellsize = round(cellsize * 360000.)/360000.
+        return cellsize  
+    if attribute == 'rows':
+        return int(cOut.split()[3])
+        #return float(cOut.split()[3])
+    if attribute == 'cols':
+        return int(cOut.split()[5])
+        #return float(cOut.split()[5])
+    if attribute == 'xUL':
+        return float(cOut.split()[17])
+    if attribute == 'yUL':
+        return float(cOut.split()[19])
     
 def getMapTotal(mapFile):
     ''' outputs the sum of all values in a map file '''
 
-    if pcr.provider_name == "pcraster":
-        total, valid = pcr.cellvalue(pcr.maptotal(mapFile),1)
-    else:
-        # TODO LUE: Make it possible to use future<T> in expressions
-        total = pcr.maptotal(mapFile).future.get()
+    total, valid = pcr.cellvalue(pcr.maptotal(mapFile),1)
     return total
 
 def getMapTotalHighPrecisionButOnlyForPositiveValues_NEEDMORETEST(mapFile):
@@ -1956,15 +1962,9 @@ def getLastDayOfMonth(date):
 
 
 def getMinMaxMean(mapFile,ignoreEmptyMap=False):
-    if pcr.provider_name == "pcraster":
-        mn = pcr.cellvalue(pcr.mapminimum(mapFile),1)[0]
-        mx = pcr.cellvalue(pcr.mapmaximum(mapFile),1)[0]
-        nrValues = pcr.cellvalue(pcr.maptotal(pcr.scalar(pcr.defined(mapFile))), 1 )[0] #/ getNumNonMissingValues(mapFile)
-    else:
-        # TODO LUE: Make it possible to use future<T> in expressions
-        mn = pcr.mapminimum(mapFile).future.get()
-        mx = pcr.mapmaximum(mapFile).future.get()
-        nrValues = pcr.maptotal(pcr.scalar(pcr.defined(mapFile))).future.get()
+    mn = pcr.cellvalue(pcr.mapminimum(mapFile),1)[0]
+    mx = pcr.cellvalue(pcr.mapmaximum(mapFile),1)[0]
+    nrValues = pcr.cellvalue(pcr.maptotal(pcr.scalar(pcr.defined(mapFile))), 1 )[0] #/ getNumNonMissingValues(mapFile)
     if nrValues == 0.0 and ignoreEmptyMap: 
         logger.warning("map is empty")
         return 0.0,0.0,0.0
@@ -2793,34 +2793,6 @@ def plot_variable(pcr_variable, filename = None):
     cmd = 'rm '+str(filename)
     os.system(cmd)
 
-def plot_variable_for_lue(pcr_variable, filename = None, remove_file = True):
-
-    if filename == None: filename = get_random_word(8) + ".tif"
-    
-    # ~ pcr.report(pcr_variable, filename)
-    
-    written = lfr.to_gdal(pcr_variable, filename)
-    written.wait()
-    
-    os.system("pwd")
-    # ~ os.system("sleep 1s")
-
-    # converting to a pcraster and using only   
-    cmd = 'pcrcalc ' + filename + '.map = "if(abs(' + filename + ') ge 0.0, ' + filename + ')"'
-    print(cmd)
-    os.system(cmd)
-    cmd = 'mapattr -s -P yb2t ' + filename + '.map'
-    print(cmd)
-    os.system(cmd)
-    
-    cmd = 'aguila ' + str(filename) + '.map' 
-    print(cmd)
-    os.system(cmd)
-    
-    if remove_file:
-        cmd = 'rm ' + str(filename) + "*"
-        os.system(cmd)
-
 # conversions to and from radians
 def deg2rad(a):
     
@@ -2831,3 +2803,8 @@ def rad2deg(a):
     return a * 180.0 / pi
 
 # julian day and relative julian day
+
+
+
+
+
