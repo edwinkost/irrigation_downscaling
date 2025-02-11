@@ -110,24 +110,24 @@ def main():
     
     
     # cell area at 30 arcsec resolution (unit: m2)
-    cell_area_30sec_file = "/scratch/depfg/sutan101/irrigated_area_30sec/develop/cdo_gridarea_clone_global_05min_correct_lats.nc"
+    cell_area_30sec_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/routing/cell_area/cdo_grid_area_30sec_map_correct_lat.nc"
     cell_area_30sec      = vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_30sec_file,\
                                                              varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
 
     # typical/reference irrigation area fraction within 30sec cell, based on the GFSAD1KCM
-    irr_area_30sec_fraction_file = "/scratch/depfg/sutan101/data/GFSAD1KCM/edwin_process_on_2021-03-XX/global_irrigated_map_GFSAD1KCMv001_30sec.map"
+    irr_area_30sec_fraction_file = "/projects/0/dfguu/users/edwin/data/GFSAD1KCM/GFSAD1KCM/edwin_process_on_2021-03-XX/global_irrigated_map_GFSAD1KCMv001_30sec.map"
     irr_area_30sec_fraction = vos.netcdf2PCRobjCloneWithoutTime(ncFile = irr_area_30sec_fraction_file,\
                                                                 varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
     # typical/reference irrigation area within 30sec cell (unit: m2)
     irr_area_30sec = irr_area_30sec_fraction * cell_area_30sec
 
     # cell area at 5 arcmin resolution (unit: m2)
-    cell_area_5min_file  = "/scratch/depfg/sutan101/irrigated_area_30sec/develop/cdo_gridarea_clone_global_05min_correct_lats.nc"
+    cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
     cell_area_5min       = vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
                                                             varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
     
     # cell unique id at 5 arcmin resolution
-    uniqueid_5min_file = "/scratch/depfg/sutan101/irrigated_area_30sec/develop/uniqueid_5min.map"
+    uniqueid_5min_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_05min/others/uniqueids/uniqueid_5min.map"
     uniqueid_5min      = vos.readPCRmapClone(v = uniqueid_5min_file, \
                                              cloneMapFileName = clone_map_file, tmpDir = tmp_directory, absolutePath = None, isLddMap = False, cover = None, isNomMap = True)
 
@@ -135,7 +135,7 @@ def main():
     sum_irr_area_30sec_at_5min = pcr.areatotal(irr_area_30sec, uniqueid_5min)
 
     # file for the irrigation area at 5 arcmin resolution (unit: hectar)
-    irr_area_5min_file   = "/scratch/depfg/sutan101/irrigated_area_30sec/develop/irrigated_area_05min_hectar_meier_g_aei_1900_2015.nc"
+    irr_area_5min_file   = "/projects/0/dfguu/users/edwin/data/irrigated_area_05min_meier_siebert_v20250211/irrigated_area_05min_hectar_meier_g_aei_1900_2015.nc"
     # ~ irr_area_5min_file   = sys.argv[2]
     
     # start year and end year
@@ -170,16 +170,17 @@ def main():
         remaining_irr_area_5min    = pcr.max(0.0, irr_area_5min - downscaled_irr_area_30sec_at_5min)
         
         # identify the cell area at 30sec that has not been assigned as irrigated land
+        # - at 30sec resolution
         not_irr_assigned_yet_cell_area_30sec             = pcr.max(0.0, cell_area_30sec - downscaled_irr_area_30sec)
-        # - TODO: 
-        
+        # - at 5min resolution
         sum_not_irr_assigned_yet_cell_area_30sec_at_5min = pcr.areatotal(not_irr_assigned_yet_cell_area_30sec, uniqueid_5min)
+        # - TODO: Add the suitability map in this step.
         
         # step 4: assigning the remaining irrigation area at 5 arcmin to 30sec cell: downscaled_irr_area_30sec = downscaled_irr_area_30sec + (not_irr_assigned_yet_cell_area_30sec / sum_not_irr_assigned_yet_cell_area_30sec) * remaining_irr_area_5min 
         downscaled_irr_area_30sec = downscaled_irr_area_30sec + \
                                     remaining_irr_area_5min * pcr.ifthenelse(sum_not_irr_assigned_yet_cell_area_30sec_at_5min > 0.0, \
                                                                              not_irr_assigned_yet_cell_area_30sec/sum_not_irr_assigned_yet_cell_area_30sec_at_5min, 0.0)
-                                                                             
+        pcr.aguila(downscaled_irr_area_30sec)                                                                     
 
 if __name__ == '__main__':
     sys.exit(main())
