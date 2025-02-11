@@ -4,6 +4,7 @@ import sys
 import shutil
 import datetime
 
+import numpy as np
 import pcraster as pcr
 
 import virtualOS as vos
