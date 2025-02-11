@@ -1,7 +1,10 @@
 
 import os
 import sys
+
 import pcraster as pcr
+
+import virtualOS as vos
 
 # General steps:
 # ~ 0. irr_area_5min = min(cell_area_5min, irr_area_5min)
