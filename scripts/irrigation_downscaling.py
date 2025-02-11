@@ -135,6 +135,8 @@ def main():
     
     # cell unique id at 5 arcmin resolution
     uniqueid_5min_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_05min/others/uniqueids/uniqueid_5min.map"
+    pcr.aguila(uniqueid_5min_file)
+    piet
     uniqueid_5min      = vos.readPCRmapClone(v = uniqueid_5min_file, \
                                              cloneMapFileName = clone_map_file, tmpDir = tmp_directory, absolutePath = None, isLddMap = False, cover = None, isNomMap = True)
 
@@ -163,6 +165,7 @@ def main():
         irr_area_5min = vos.netcdf2PCRobjClone(ncFile = irr_area_5min_file,\
                                                varName = "automatic", dateInput = fulldate, useDoy = None, cloneMapFileName  = clone_map_file, LatitudeLongitude = True, specificFillValue = None)
     
+        irr_area_5min = pcr.cover(irr_area_5min, 0.0)
         # step 0: make sure that irrigation area at 5 arcmin does not exceed 5 arcmin cell area: irr_area_5min = min(cell_area_5min, irr_area_5min)
         irr_area_5min = pcr.min(irr_area_5min, cell_area_5min)
     
