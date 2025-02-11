@@ -121,7 +121,7 @@ def main():
                                                              varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
 
     # typical/reference irrigation area fraction within 30sec cell, based on the GFSAD1KCM
-    irr_area_30sec_fraction_file = "/projects/0/dfguu/users/edwin/data/GFSAD1KCM/GFSAD1KCM/edwin_process_on_2021-03-XX/global_irrigated_map_GFSAD1KCMv001_30sec.map"
+    irr_area_30sec_fraction_file = "/projects/0/dfguu/users/edwin/data/GFSAD1KCM/edwin_process_on_2021-03-XX/global_irrigated_map_GFSAD1KCMv001_30sec.map"
     irr_area_30sec_fraction = vos.netcdf2PCRobjCloneWithoutTime(ncFile = irr_area_30sec_fraction_file,\
                                                                 varName = "automatic", cloneMapFileName = clone_map_file, LatitudeLongitude = True, specificFillValue = None, absolutePath = None)
     # typical/reference irrigation area within 30sec cell (unit: m2)
