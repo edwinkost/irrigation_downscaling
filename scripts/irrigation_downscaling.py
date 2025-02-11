@@ -165,8 +165,8 @@ def main():
     attributeDictionary['description']  = "Created by Edwin H. Sutanudjaja, see https://github.com/edwinkost/irrigation_downscaling/blob/main/scripts/irrigation_downscaling.py"
 
     # initiate the netcd object: 
-    tssNetCDF = MakingNetCDF(cloneMapFile = cloneMapFileName, \
-                             attribute = clone_map_file)
+    tssNetCDF = MakingNetCDF(cloneMapFile = clone_map_file, \
+                             attribute    = attributeDictionary)
     # - netcdf output variable name, file name, and unit
     output = {}
     var = "irrigationArea"
