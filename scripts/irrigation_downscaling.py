@@ -104,7 +104,7 @@ def main():
     # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/test/"
     # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/rhine_meuse_1900_2015/"
     # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/global_1900_2015/"
-    out_directory     = "/scratch-shared/edwin/irrigation_downscaling/ssp1_2015_2100/"
+    out_directory     = "/scratch-shared/edwin/irrigation_downscaling/rhine_30sec/ssp1_2015_2100/"
     # ~ out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
@@ -117,8 +117,8 @@ def main():
 
 
     # clone map
-    # ~ clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/europe_30sec/cloneMaps/clonemaps_europe_countries/rhinemeuse/rhinemeuse_30sec.map"
-    clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/cloneMaps/global_30sec_clone.map"
+    clone_map_file     = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/europe_30sec/cloneMaps/clonemaps_europe_countries/rhinemeuse/rhinemeuse_30sec.map"
+    # ~ clone_map_file = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_arise/develop/global_30sec/cloneMaps/global_30sec_clone.map"
     pcr.setclone(clone_map_file) 
     
     
@@ -151,7 +151,7 @@ def main():
     # file for the irrigation area at 5 arcmin resolution (unit: hectar)
     # ~ irr_area_5min_file   = "/projects/0/dfguu/users/edwin/data/irrigated_area_05min_meier_siebert_v20250211/irrigated_area_05min_hectar_meier_g_aei_1900_2015.nc"
     #
-    irr_area_5min_file   = "/scratch-shared/edwin/irrigated_area_jen_05min/irrigated_area_05min/irrigated_area_05min_hectar_meier_g_aei_ssp1_2015_2100.nc"
+    irr_area_5min_file   = "/scratch-shared/edwin/irrigated_area_jen_05min/irrigated_area_05min_hectar_meier_g_aei_ssp1_2015_2100.nc"
     #
     # ~ irr_area_5min_file   = sys.argv[2]
     
