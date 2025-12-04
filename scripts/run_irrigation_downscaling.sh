@@ -1,0 +1,2 @@
+
+python irrigation_downscaling.py /scratch-shared/edwin/irrigation_downscaling/rhine_30sec/ssp5_2015_2100/ /scratch-shared/edwin/irrigated_area_jen_05min/irrigated_area_05min_hectar_meier_g_aei_ssp5_2015_2100.nc 
