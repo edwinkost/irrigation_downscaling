@@ -104,8 +104,8 @@ def main():
     # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/test/"
     # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/rhine_meuse_1900_2015/"
     # ~ out_directory     = "/scratch-shared/edwinbar/irrigation_downscaling/global_1900_2015/"
-    out_directory     = "/scratch-shared/edwin/irrigation_downscaling/rhine_30sec/ssp5_2015_2100/"
-    # ~ out_directory = sys.argv[1]
+    # ~ out_directory     = "/scratch-shared/edwin/irrigation_downscaling/rhine_30sec/ssp5_2015_2100/"
+    out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
     if os.path.exists(out_directory):
@@ -151,9 +151,9 @@ def main():
     # file for the irrigation area at 5 arcmin resolution (unit: hectar)
     # ~ irr_area_5min_file   = "/projects/0/dfguu/users/edwin/data/irrigated_area_05min_meier_siebert_v20250211/irrigated_area_05min_hectar_meier_g_aei_1900_2015.nc"
     #
-    irr_area_5min_file   = "/scratch-shared/edwin/irrigated_area_jen_05min/irrigated_area_05min_hectar_meier_g_aei_ssp5_2015_2100.nc"
-    #
-    # ~ irr_area_5min_file   = sys.argv[2]
+    # ~ irr_area_5min_file   = "/scratch-shared/edwin/irrigated_area_jen_05min/irrigated_area_05min_hectar_meier_g_aei_ssp5_2015_2100.nc"
+    # ~ #
+    irr_area_5min_file   = sys.argv[2]
     
     # start year and end year
     # ~ staYear = 2000
@@ -162,9 +162,6 @@ def main():
     # ~ endYear = 2015
     staYear = 2015
     endYear = 2100
-    # ~ staYear = int(sys.argv[4])
-    # ~ endYear = int(sys.argv[5])
-    
 
     # attribute for netCDF files 
     attributeDictionary = {}
