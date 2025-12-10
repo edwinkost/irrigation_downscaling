@@ -182,7 +182,8 @@ def main():
     var = "irrigationArea"
     output[var] = {}
     # ~ output[var]['file_name'] = out_directory + "/" + "irrigated_area_30sec_hectar_meier_g_aei_1900_2015_v20250211.nc"
-    output[var]['file_name'] = out_directory + "/" + "irrigated_area_30sec_hectar_meier_g_aei_ssp5_2015_2100_v20250310.nc"
+    # ~ output[var]['file_name'] = out_directory + "/" + "irrigated_area_30sec_hectar_meier_g_aei_ssp5_2015_2100_v20250310.nc"
+    output[var]['file_name'] = out_directory + "/" + sys.argv[3]
     output[var]['unit'] = "hectar"
     tssNetCDF.createNetCDF(output[var]['file_name'], var, output[var]['unit'])
     # - index for the netcdf file
